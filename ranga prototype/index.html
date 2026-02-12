@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>StyleMe | AI Fashion Stylist</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--THIS IS THE STYLING SHEET FOR THE PROJECT-->
+
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+body{
+  background:linear-gradient(135deg,#000,#0f172a,#000);
+  color:white;
+}
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 40px;
+}
+.logo{font-size:26px;font-weight:bold;}
+.logo span{color:#ec4899;}
+nav a{
+  margin:0 12px;
+  font-size:14px;
+  color:#9ca3af;
+  cursor:pointer;
+  position:relative;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+nav a:hover{
+  color:#ec4899;
+  transform: scale(1.15);
+}
+
+/* underline glow effect */
+nav a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-6px;
+  width:0%;
+  height:2px;
+  background:linear-gradient(90deg,#ec4899,#a855f7);
+  transition:width 0.25s ease;
+}
+
+nav a:hover::after{
+  width:100%;
+}
+
+nav a.active{color:#ec4899;}
+
+.hero{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  padding:60px 40px;
+  gap:40px;
+  align-items:center;
+}
+.tagline{color:#ec4899;font-size:12px;letter-spacing:2px;}
+h2{font-size:48px;margin:20px 0;}
+h2 span{
+  background:linear-gradient(90deg,#ec4899,#a855f7);
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.description{color:#9ca3af;max-width:400px;}
+
+.ai-card{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(15px);
+  padding:25px;
+  border-radius:25px;
+}
+.camera-box{
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.2);
+}
+video,img{width:100%;display:block;}
+canvas{display:none;}
+
+button,select,input{
+  width:100%;
+  margin-top:12px;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+}
+.secondary-btn{background:#1e293b;color:white;}
+.primary-btn{
+  background:linear-gradient(90deg,#ec4899,#a855f7);
+  color:white;
+  font-weight:bold;
+}
+.status{text-align:center;margin-top:12px;font-size:13px;color:#d1d5db;}
+
+.results{padding:40px;}
+.result-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+.card{
+  background:rgba(255,255,255,0.08);
+  padding:20px;
+  border-radius:18px;
+}
+.card h4{color:#ec4899;margin-bottom:8px;}
+.card.wide{grid-column:span 2;}
+.hidden{display:none;}
+
+/* FOOTER */
+footer{
+  border-top:1px solid rgba(255,255,255,0.1);
+  padding:25px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#9ca3af;
+  font-size:13px;
+}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:12px;}
+}
+.upload-btn{
+  display:block;
+  width:100%;
+  text-align:center;
+  margin-top:12px;
+  padding:14px;
+  border-radius:14px;
+  background:#1e293b;
+  color:white;
+  cursor:pointer;
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.upload-btn:hover{
+  background:#334155;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.file-name{
+  margin-top:6px;
+  font-size:12px;
+  text-align:center;
+  color:#9ca3af;
+}
+
+/* simple shutter flash overlay */
+.shutter-flash{
+  position:fixed;
+  inset:0;
+  background:white;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.2s ease;
+  z-index:9999;
+}
+.shutter-flash.active{
+  opacity:1;
+}
+
+</style>
+
+<!--THIS IS THE STRUCTURE CODE FOR "STYLEME-AI"-->
+
+
+</head>
+<body>
+<div id="shutterFlash" class="shutter-flash"></div>
+
+<header class="navbar">
+  <h1 class="logo">Style<span>Me</span></h1>
+  <nav>
+    <a class="active">Virtual Fitting</a>
+    <a>AI Styles</a>
+    <a>AR</a>
+    <a>About</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <p class="tagline">AI FASHION INTELLIGENCE</p>
+    <h2>The future of <br><span>personal styling</span></h2>
+    <p class="description">
+      Analyze your look via camera or uploaded image and get AI outfit suggestions.
+    </p>
+  </div>
+
+  <div class="ai-card">
+    <div class="camera-box">
+      <video id="video" autoplay></video>
+      <img id="preview" class="hidden">
+      <canvas id="canvas"></canvas>
+    </div>
+  
+    <button id="captureBtn" class="secondary-btn">📸 Capture Look</button>
+    <label for="upload" class="upload-btn">📁 Upload Image</label>
+<input type="file" id="upload" accept="image/*" hidden>
+<p id="fileName" class="file-name">No file selected</p>
+
+<section id="cameraOptions" class="camera-options">
+  <button id="toggleBtn" class="secondary-btn">Turn Camera Off</button>
+</section>
+
+    <select id="occasion">
+      <option value="" disabled selected>Select Occasion</option>
+      <option value="casual">Casual</option>
+      <option value="college">College</option>
+      <option value="party">Party</option>
+      <option value="formal">Formal</option>
+    </select>
+
+    <select id="gender">
+      <option value="" disabled selected>Select Gender / Fit</option>
+      <option value="female">Feminine</option>
+      <option value="male">Masculine</option>
+      <option value="neutral">Gender-neutral</option>
+    </select>
+
+    <select id="style">
+      <option value="" disabled selected>Select Style</option>
+      <option value="minimal">Minimal / Clean</option>
+      <option value="streetwear">Streetwear</option>
+      <option value="classic">Classic</option>
+      <option value="bold">Bold / Statement</option>
+    </select>
+
+    <select id="budget">
+      <option value="" disabled selected>Select Budget</option>
+      <option value="low">Low (Affordable)</option>
+      <option value="medium">Medium</option>
+      <option value="high">High / Premium</option>
+    </select>
+
+    <button id="analyzeBtn" class="primary-btn">Analyze with AI</button>
+    <p id="status" class="status">Ready for analysis</p>
+  </div>
+</section>
+
+<section id="results" class="results hidden">
+  <h3>Your Style Recommendation ✨</h3>
+  <div class="result-grid">
+    <div class="card"><h4>👕 Top</h4><p id="top"></p></div>
+    <div class="card"><h4>👖 Bottom</h4><p id="bottom"></p></div>
+    <div class="card"><h4>👟 Footwear</h4><p id="footwear"></p></div>
+    <div class="card"><h4>🎨 Colors</h4><p id="colors"></p></div>
+    <div class="card wide"><h4>✨ Style Tip</h4><p id="tips"></p></div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 StyleMe • AI Fashion Stylist</p>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  const preview = document.getElementById("preview");
+  const upload = document.getElementById("upload");
+  const status = document.getElementById("status");
+  const button = document.getElementById("toggleBtn");
+  const fileName = document.getElementById("fileName");
+  const captureBtn = document.getElementById("captureBtn");
+  const analyzeBtn = document.getElementById("analyzeBtn");
+  const occasionSelect = document.getElementById("occasion");
+  const genderSelect = document.getElementById("gender");
+  const styleSelect = document.getElementById("style");
+  const budgetSelect = document.getElementById("budget");
+  const resultsSection = document.getElementById("results");
+  const topEl = document.getElementById("top");
+  const bottomEl = document.getElementById("bottom");
+  const footwearEl = document.getElementById("footwear");
+  const colorsEl = document.getElementById("colors");
+  const tipsEl = document.getElementById("tips");
+  const shutterFlash = document.getElementById("shutterFlash");
+
+  let stream = null;
+  let cameraOn = false;
+
+  navigator.mediaDevices.getUserMedia({video:true})
+    .then(s=>{
+      stream = s;
+      video.srcObject = stream;
+      cameraOn = true;
+      button.textContent = "Turn Camera Off";
+    })
+    .catch(()=>status.textContent="Camera not available");
+
+  button.addEventListener("click", async () => {
+    if (!cameraOn) {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        button.textContent = "Turn Camera Off";
+        cameraOn = true;
+      } catch (err) {
+        alert("Error accessing camera: " + err);
+      }
+    } else {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+      video.srcObject = null;
+      button.textContent = "Turn Camera On";
+      cameraOn = false;
+    }
+  });
+
+  captureBtn.onclick=()=>{
+    if (!cameraOn || !stream) {
+      status.textContent = "Turn on the camera first 📷";
+      return;
+    }
+
+    // draw current frame to canvas
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video,0,0);
+    preview.classList.add("hidden");
+    video.classList.remove("hidden");
+
+    // shutter flash effect
+    shutterFlash.classList.add("active");
+    setTimeout(()=>{
+      shutterFlash.classList.remove("active");
+    },150);
+
+    // turn camera off after capture
+    stream.getTracks().forEach(track => track.stop());
+    video.srcObject = null;
+    cameraOn = false;
+    button.textContent = "Turn Camera On";
+
+    status.textContent="Image captured. Camera turned off ✅";
+  };
+
+  upload.onchange=e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+    fileName.textContent = file.name;
+    const img=new Image();
+    img.onload=()=>{
+      canvas.width=img.width;
+      canvas.height=img.height;
+      ctx.drawImage(img,0,0);
+      preview.src=img.src;
+      preview.classList.remove("hidden");
+      video.classList.add("hidden");
+      status.textContent="Image uploaded ✔";
+    };
+    img.src=URL.createObjectURL(file);
+  };
+
+  analyzeBtn.onclick = async () => {
+    if (!canvas.width) {
+      status.textContent = "Capture or upload an image first ❗";
+      return;
+    }
+
+    const occasion = occasionSelect.value;
+    const gender = genderSelect.value;
+    const style = styleSelect.value;
+    const budget = budgetSelect.value;
+    const imageData = canvas.toDataURL("image/png");
+
+    if (!occasion || !gender || !style || !budget) {
+      status.textContent = "Please select occasion, gender, style, and budget 👗";
+      return;
+    }
+
+    status.textContent = "AI analyzing your style (Python backend)...";
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/suggest", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ occasion, gender, style, budget, image: imageData })
+      });
+
+      if (!response.ok) {
+        throw new Error("Server error");
+      }
+
+      const data = await response.json();
+
+      resultsSection.classList.remove("hidden");
+      topEl.textContent = data.top;
+      bottomEl.textContent = data.bottom;
+      footwearEl.textContent = data.footwear;
+      colorsEl.textContent = data.colors;
+      tipsEl.textContent = data.tips;
+      status.textContent = "Style suggestions generated by Python ✔";
+    } catch (err) {
+      console.error(err);
+      status.textContent = "Could not reach Python backend. Is it running?";
+    }
+  };
+});
+
+</script>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
 import base64
@@ -7,6 +7,20 @@ from datetime import datetime
 app = Flask(__name__)
 # Allow requests from any origin (use stricter rules in production)
 CORS(app)
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+@app.get("/")
+def home():
+    # Serve the single-page UI
+    return send_from_directory(BASE_DIR, "index.html")
+
+
+@app.get("/saved_photos/<path:filename>")
+def saved_photos(filename: str):
+    # Optional: allow viewing saved captures in browser
+    return send_from_directory(os.path.join(BASE_DIR, "saved_photos"), filename)
 
 
 def save_image_from_data_url(data_url: str) -> str | None:

@@ -59,6 +59,11 @@ nav a:hover::after{
 }
 
 nav a.active{color:#ec4899;}
+nav a:focus-visible{
+  outline:2px solid rgba(236,72,153,0.8);
+  outline-offset:6px;
+  border-radius:10px;
+}
 
 .hero{
   display:grid;
@@ -76,6 +81,128 @@ h2 span{
   -webkit-text-fill-color:transparent;
 }
 .description{color:#9ca3af;max-width:400px;}
+
+/* Trending slideshow */
+.trend-slider{
+  margin-top:22px;
+  max-width:460px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:22px;
+  padding:18px 18px 14px 18px;
+  backdrop-filter: blur(14px);
+}
+.trend-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.trend-title{
+  font-size:13px;
+  letter-spacing:1.8px;
+  color:#d1d5db;
+}
+.trend-badge{
+  font-size:12px;
+  padding:8px 10px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(236,72,153,0.18), rgba(168,85,247,0.18));
+  border:1px solid rgba(236,72,153,0.25);
+  color:#f9a8d4;
+  white-space:nowrap;
+}
+.trend-stage{
+  position:relative;
+  min-height:150px;
+}
+.trend-slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transform:translateY(8px);
+  transition: opacity 360ms ease, transform 360ms ease;
+  pointer-events:none;
+}
+.trend-slide.active{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+.trend-slide h4{
+  font-size:18px;
+  margin-bottom:8px;
+}
+.trend-slide h4 span{
+  background:linear-gradient(90deg,#ec4899,#a855f7);
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.trend-slide p{
+  color:#9ca3af;
+  font-size:13px;
+  line-height:1.35;
+  margin-bottom:10px;
+}
+.trend-pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.trend-pill{
+  font-size:12px;
+  padding:8px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#e5e7eb;
+}
+.trend-controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:12px;
+  gap:10px;
+}
+.trend-nav{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.trend-btn{
+  width:auto;
+  padding:10px 12px;
+  border-radius:14px;
+  background:#1e293b;
+  color:white;
+  border:1px solid rgba(255,255,255,0.12);
+  cursor:pointer;
+}
+.trend-btn:hover{background:#334155;}
+.trend-dots{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.trend-dot{
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.25);
+  background:rgba(255,255,255,0.10);
+  cursor:pointer;
+  padding:0;
+}
+.trend-dot.active{
+  background:linear-gradient(90deg,#ec4899,#a855f7);
+  border-color:transparent;
+  width:20px;
+}
+@media (prefers-reduced-motion: reduce){
+  .trend-slide{transition:none;}
+}
 
 .ai-card{
   background:rgba(255,255,255,0.08);
@@ -120,6 +247,66 @@ button,select,input{
 .card h4{color:#ec4899;margin-bottom:8px;}
 .card.wide{grid-column:span 2;}
 .hidden{display:none;}
+
+/* simple "page" sections for navbar */
+.page{
+  padding:40px;
+}
+.page h3{
+  font-size:28px;
+  margin-bottom:16px;
+}
+.muted{color:#9ca3af;}
+
+.pill-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  margin-top:18px;
+}
+.pill{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  padding:18px;
+  border-radius:18px;
+}
+.pill h4{color:#ec4899;margin-bottom:8px;}
+
+/* AR */
+.ar-wrap{
+  display:grid;
+  grid-template-columns:1.2fr 0.8fr;
+  gap:24px;
+  align-items:start;
+}
+.ar-stage{
+  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.06);
+}
+.ar-stage video{
+  width:100%;
+  height:auto;
+  display:block;
+}
+.ar-overlay{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  pointer-events:none;
+}
+.ar-overlay img{
+  width:55%;
+  max-width:420px;
+  opacity:0.85;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,0.55));
+}
+@media(max-width:900px){
+  .ar-wrap{grid-template-columns:1fr;}
+}
 
 /* FOOTER */
 footer{
@@ -190,20 +377,39 @@ footer{
 <header class="navbar">
   <h1 class="logo">Style<span>Me</span></h1>
   <nav>
-    <a class="active">Virtual Fitting</a>
-    <a>AI Styles</a>
-    <a>AR</a>
-    <a>About</a>
+    <a href="#virtual" data-page="virtual" class="active">Virtual Fitting</a>
+    <a href="#ai-styles" data-page="ai-styles">AI Styles</a>
+    <a href="#ar" data-page="ar">AR</a>
+    <a href="#about" data-page="about">About</a>
   </nav>
 </header>
 
-<section class="hero">
+<!-- VIRTUAL FITTING -->
+<section id="page-virtual" class="page">
+<div class="hero">
   <div>
     <p class="tagline">AI FASHION INTELLIGENCE</p>
     <h2>The future of <br><span>personal styling</span></h2>
     <p class="description">
       Analyze your look via camera or uploaded image and get AI outfit suggestions.
     </p>
+
+    <div id="trendSlider" class="trend-slider" aria-label="Trending style slideshow">
+      <div class="trend-head">
+        <div class="trend-title">TRENDING STYLES</div>
+        <div id="trendBadge" class="trend-badge">Auto</div>
+      </div>
+
+      <div id="trendStage" class="trend-stage" aria-live="polite"></div>
+
+      <div class="trend-controls">
+        <div class="trend-nav">
+          <button id="trendPrev" class="trend-btn" type="button" aria-label="Previous trend">Prev</button>
+          <button id="trendNext" class="trend-btn" type="button" aria-label="Next trend">Next</button>
+        </div>
+        <div id="trendDots" class="trend-dots" aria-label="Trend slide dots"></div>
+      </div>
+    </div>
   </div>
 
   <div class="ai-card">
@@ -255,6 +461,7 @@ footer{
     <button id="analyzeBtn" class="primary-btn">Analyze with AI</button>
     <p id="status" class="status">Ready for analysis</p>
   </div>
+</div>
 </section>
 
 <section id="results" class="results hidden">
@@ -268,12 +475,267 @@ footer{
   </div>
 </section>
 
+<!-- AI STYLES -->
+<section id="page-ai-styles" class="page hidden">
+  <h3>AI Styles</h3>
+  <p class="muted">Explore style archetypes and pick a direction before you analyze your look.</p>
+
+  <div class="pill-grid">
+    <div class="pill">
+      <h4>Minimal / Clean</h4>
+      <p class="muted">Neutral palette, clean silhouettes, no loud branding. Best for timeless daily fits.</p>
+    </div>
+    <div class="pill">
+      <h4>Streetwear</h4>
+      <p class="muted">Oversized layers, bold sneakers, statement graphics. Built for comfort + attitude.</p>
+    </div>
+    <div class="pill">
+      <h4>Classic</h4>
+      <p class="muted">Polished basics, simple tailoring, quality fabrics. Great for smart casual / formal.</p>
+    </div>
+    <div class="pill">
+      <h4>Bold / Statement</h4>
+      <p class="muted">Color blocking, prints, standout accessories. One hero piece, the rest balanced.</p>
+    </div>
+  </div>
+
+  <p class="muted" style="margin-top:18px;">
+    Tip: go back to <b>Virtual Fitting</b> and select your style to get recommendations.
+  </p>
+</section>
+
+<!-- AR -->
+<section id="page-ar" class="page hidden">
+  <h3>AR Try‑On (Prototype)</h3>
+  <p class="muted">This is a lightweight demo: it opens your camera and overlays an item for a quick preview.</p>
+
+  <div class="ar-wrap" style="margin-top:16px;">
+    <div class="ar-stage">
+      <video id="arVideo" autoplay playsinline muted></video>
+      <div class="ar-overlay">
+        <img id="arOverlayImg" alt="AR overlay">
+      </div>
+    </div>
+
+    <div class="pill">
+      <h4>Controls</h4>
+      <button id="arStartBtn" class="primary-btn">Start AR Camera</button>
+      <button id="arStopBtn" class="secondary-btn">Stop AR Camera</button>
+
+      <select id="arItem" style="margin-top:12px;">
+        <option value="none">No overlay</option>
+        <option value="glasses">Glasses</option>
+        <option value="mask">Mask</option>
+        <option value="shirt">Shirt outline</option>
+      </select>
+
+      <p id="arStatus" class="status">AR camera is stopped</p>
+      <p class="muted" style="font-size:12px; margin-top:10px;">Note: real body/face tracking needs a vision model; this is just the UI + camera pipeline.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="page-about" class="page hidden">
+  <h3>About StyleMe</h3>
+  <p class="muted">
+    StyleMe is a prototype that combines camera capture + a Python backend to generate outfit suggestions from your selected occasion, fit, style, and budget.
+  </p>
+
+  <div class="pill-grid" style="margin-top:18px;">
+    <div class="pill">
+      <h4>How it works</h4>
+      <p class="muted">You capture/upload a photo, pick your preferences, and the backend returns curated outfit recommendations.</p>
+    </div>
+    <div class="pill">
+      <h4>Privacy</h4>
+      <p class="muted">If you analyze with a photo, a copy may be saved locally on this computer in <code>saved_photos/</code>.</p>
+    </div>
+    <div class="pill">
+      <h4>Next steps</h4>
+      <p class="muted">Add real AI (vision + LLM), real AR tracking, and a product catalog to generate shoppable outfits.</p>
+    </div>
+  </div>
+</section>
+
 <footer>
   <p>© 2026 StyleMe • AI Fashion Stylist</p>
 </footer>
 
 <script>
 document.addEventListener("DOMContentLoaded",()=>{
+  // --- trending slideshow (Virtual Fitting hero) ---
+  const trendSlider = document.getElementById("trendSlider");
+  const trendStage = document.getElementById("trendStage");
+  const trendDots = document.getElementById("trendDots");
+  const trendPrev = document.getElementById("trendPrev");
+  const trendNext = document.getElementById("trendNext");
+  const trendBadge = document.getElementById("trendBadge");
+
+  const trendSlides = [
+    {
+      name: "Clean Girl",
+      blurb: "Crisp basics + glossy neutrals. Think: fitted tee, straight jeans, minimal jewelry.",
+      pills: ["Neutral palette", "Clean silhouettes", "Low-key accessories"]
+    },
+    {
+      name: "Old Money",
+      blurb: "Quiet luxury energy. Elevated knits, tailored trousers, loafers—always well-fitted.",
+      pills: ["Tailoring", "Premium fabrics", "Timeless colors"]
+    },
+    {
+      name: "Y2K Revival",
+      blurb: "Playful, nostalgic, bold. Baby tees, cargos, statement sneakers, pop colors.",
+      pills: ["Layers", "Statement pieces", "Fun color"]
+    },
+    {
+      name: "Techwear",
+      blurb: "Functional street style. Sleek layers, utility details, monochrome with sharp accents.",
+      pills: ["Utility", "Monochrome", "Sporty layers"]
+    },
+    {
+      name: "Gorpcore",
+      blurb: "Outdoor-core in the city. Puffers, fleeces, trail shoes—practical but styled.",
+      pills: ["Fleece / shell", "Chunky shoes", "Weather-ready"]
+    },
+    {
+      name: "Coquette",
+      blurb: "Soft + romantic. Bows, pastel tones, delicate textures—balanced with simple basics.",
+      pills: ["Pastels", "Delicate details", "Soft textures"]
+    }
+  ];
+
+  let trendIndex = 0;
+  let trendTimer = null;
+  const trendIntervalMs = 4200;
+  const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function renderTrendSlides(){
+    if (!trendStage || !trendDots) return;
+    trendStage.innerHTML = "";
+    trendDots.innerHTML = "";
+
+    trendSlides.forEach((s, i)=>{
+      const slide = document.createElement("div");
+      slide.className = "trend-slide" + (i === trendIndex ? " active" : "");
+      slide.setAttribute("data-index", String(i));
+      slide.innerHTML = `
+        <h4><span>${s.name}</span></h4>
+        <p>${s.blurb}</p>
+        <div class="trend-pills">
+          ${s.pills.map(p=>`<span class="trend-pill">${p}</span>`).join("")}
+        </div>
+      `;
+      trendStage.appendChild(slide);
+
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "trend-dot" + (i === trendIndex ? " active" : "");
+      dot.setAttribute("aria-label", `Go to ${s.name}`);
+      dot.addEventListener("click", ()=> goToTrend(i, { user:true }));
+      trendDots.appendChild(dot);
+    });
+  }
+
+  function updateTrendActive(){
+    const slides = Array.from(trendStage?.querySelectorAll(".trend-slide") || []);
+    const dots = Array.from(trendDots?.querySelectorAll(".trend-dot") || []);
+    slides.forEach((el, i)=> el.classList.toggle("active", i === trendIndex));
+    dots.forEach((el, i)=> el.classList.toggle("active", i === trendIndex));
+  }
+
+  function goToTrend(nextIndex, opts = { user:false }){
+    trendIndex = (nextIndex + trendSlides.length) % trendSlides.length;
+    updateTrendActive();
+    if (trendBadge) trendBadge.textContent = opts.user ? "Manual" : "Auto";
+    restartTrendTimer();
+  }
+
+  function nextTrend(opts){ goToTrend(trendIndex + 1, opts); }
+  function prevTrend(opts){ goToTrend(trendIndex - 1, opts); }
+
+  function stopTrendTimer(){
+    if (trendTimer) window.clearInterval(trendTimer);
+    trendTimer = null;
+  }
+
+  function startTrendTimer(){
+    if (prefersReducedMotion) return; // don't auto-animate if user prefers less motion
+    stopTrendTimer();
+    trendTimer = window.setInterval(()=> nextTrend({ user:false }), trendIntervalMs);
+  }
+
+  function restartTrendTimer(){
+    stopTrendTimer();
+    startTrendTimer();
+  }
+
+  if (trendStage && trendDots && trendPrev && trendNext){
+    renderTrendSlides();
+    startTrendTimer();
+
+    trendNext.addEventListener("click", ()=> nextTrend({ user:true }));
+    trendPrev.addEventListener("click", ()=> prevTrend({ user:true }));
+
+    // Pause autoplay on hover/focus so it doesn't fight the user
+    trendSlider?.addEventListener("mouseenter", stopTrendTimer);
+    trendSlider?.addEventListener("mouseleave", startTrendTimer);
+    trendSlider?.addEventListener("focusin", stopTrendTimer);
+    trendSlider?.addEventListener("focusout", startTrendTimer);
+  }
+
+  // --- navbar page switching ---
+  const pages = {
+    "virtual": document.getElementById("page-virtual"),
+    "ai-styles": document.getElementById("page-ai-styles"),
+    "ar": document.getElementById("page-ar"),
+    "about": document.getElementById("page-about"),
+  };
+  const navLinks = Array.from(document.querySelectorAll("header nav a[data-page]"));
+
+  function setActiveNav(pageKey){
+    navLinks.forEach(a=>{
+      a.classList.toggle("active", a.dataset.page === pageKey);
+    });
+  }
+
+  function showPage(pageKey){
+    const key = pages[pageKey] ? pageKey : "virtual";
+    Object.entries(pages).forEach(([k, el])=>{
+      el.classList.toggle("hidden", k !== key);
+    });
+    setActiveNav(key);
+    window.scrollTo({top:0, behavior:"smooth"});
+
+    // stop cameras when switching pages
+    if (key !== "virtual") stopVirtualCamera();
+    if (key !== "ar") stopArCamera();
+  }
+
+  function pageFromHash(){
+    const hash = (window.location.hash || "#virtual").replace("#","");
+    return hash || "virtual";
+  }
+
+  navLinks.forEach(a=>{
+    a.addEventListener("click",(e)=>{
+      e.preventDefault();
+      const pageKey = a.dataset.page;
+      if (!pageKey) return;
+      history.replaceState(null, "", `#${pageKey}`);
+      showPage(pageKey);
+      if (pageKey === "ar") startArCamera();
+      if (pageKey === "virtual") startVirtualCamera();
+    });
+  });
+  window.addEventListener("hashchange", ()=>{
+    const key = pageFromHash();
+    showPage(key);
+    if (key === "ar") startArCamera();
+    if (key === "virtual") startVirtualCamera();
+  });
+
+  // --- Virtual fitting camera + analysis ---
   const video = document.getElementById("video");
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
@@ -296,40 +758,51 @@ document.addEventListener("DOMContentLoaded",()=>{
   const tipsEl = document.getElementById("tips");
   const shutterFlash = document.getElementById("shutterFlash");
 
-  let stream = null;
+  let vfStream = null;
   let cameraOn = false;
 
-  navigator.mediaDevices.getUserMedia({video:true})
-    .then(s=>{
-      stream = s;
-      video.srcObject = stream;
+  async function startVirtualCamera(){
+    if (cameraOn && vfStream) return;
+    try{
+      vfStream = await navigator.mediaDevices.getUserMedia({video:true});
+      video.srcObject = vfStream;
       cameraOn = true;
       button.textContent = "Turn Camera Off";
-    })
-    .catch(()=>status.textContent="Camera not available");
+      status.textContent = "Camera ready ✅";
+    }catch{
+      status.textContent="Camera not available";
+    }
+  }
+
+  function stopVirtualCamera(){
+    if (vfStream){
+      vfStream.getTracks().forEach(t=>t.stop());
+    }
+    vfStream = null;
+    video.srcObject = null;
+    cameraOn = false;
+    button.textContent = "Turn Camera On";
+  }
 
   button.addEventListener("click", async () => {
     if (!cameraOn) {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
+        vfStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = vfStream;
         button.textContent = "Turn Camera Off";
         cameraOn = true;
       } catch (err) {
         alert("Error accessing camera: " + err);
       }
     } else {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-      video.srcObject = null;
+      stopVirtualCamera();
       button.textContent = "Turn Camera On";
       cameraOn = false;
     }
   });
 
   captureBtn.onclick=()=>{
-    if (!cameraOn || !stream) {
+    if (!cameraOn || !vfStream) {
       status.textContent = "Turn on the camera first 📷";
       return;
     }
@@ -338,8 +811,11 @@ document.addEventListener("DOMContentLoaded",()=>{
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video,0,0);
-    preview.classList.add("hidden");
-    video.classList.remove("hidden");
+
+    // show captured preview
+    preview.src = canvas.toDataURL("image/png");
+    preview.classList.remove("hidden");
+    video.classList.add("hidden");
 
     // shutter flash effect
     shutterFlash.classList.add("active");
@@ -348,10 +824,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     },150);
 
     // turn camera off after capture
-    stream.getTracks().forEach(track => track.stop());
-    video.srcObject = null;
-    cameraOn = false;
-    button.textContent = "Turn Camera On";
+    stopVirtualCamera();
 
     status.textContent="Image captured. Camera turned off ✅";
   };
@@ -393,7 +866,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     status.textContent = "AI analyzing your style (Python backend)...";
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/suggest", {
+      const response = await fetch("/suggest", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -419,6 +892,98 @@ document.addEventListener("DOMContentLoaded",()=>{
       status.textContent = "Could not reach Python backend. Is it running?";
     }
   };
+
+  // --- AR camera (simple overlay demo) ---
+  const arVideo = document.getElementById("arVideo");
+  const arStartBtn = document.getElementById("arStartBtn");
+  const arStopBtn = document.getElementById("arStopBtn");
+  const arItem = document.getElementById("arItem");
+  const arOverlayImg = document.getElementById("arOverlayImg");
+  const arStatus = document.getElementById("arStatus");
+
+  let arStream = null;
+
+  const overlays = {
+    none: "",
+    // Inline SVG as data URLs (no extra files needed)
+    glasses:
+      "data:image/svg+xml;utf8," +
+      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1">
+            <stop offset="0" stop-color="#ec4899"/><stop offset="1" stop-color="#a855f7"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#g)" stroke-width="26" stroke-linecap="round" opacity="0.95">
+          <rect x="90" y="90" width="240" height="140" rx="60"/>
+          <rect x="470" y="90" width="240" height="140" rx="60"/>
+          <path d="M330 160 C 370 140, 430 140, 470 160"/>
+          <path d="M90 150 C 40 150, 30 150, 10 150"/>
+          <path d="M790 150 C 760 150, 770 150, 800 150"/>
+        </g>
+      </svg>`),
+    mask:
+      "data:image/svg+xml;utf8," +
+      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+        <defs>
+          <linearGradient id="m" x1="0" x2="1">
+            <stop offset="0" stop-color="#a855f7"/><stop offset="1" stop-color="#ec4899"/>
+          </linearGradient>
+        </defs>
+        <path d="M160 210 C 260 120, 540 120, 640 210 C 690 260, 690 360, 640 410 C 540 490, 260 490, 160 410 C 110 360, 110 260, 160 210 Z"
+              fill="rgba(0,0,0,0.15)" stroke="url(#m)" stroke-width="18"/>
+        <path d="M250 270 L 550 270" stroke="url(#m)" stroke-width="14" stroke-linecap="round" opacity="0.8"/>
+        <path d="M240 330 L 560 330" stroke="url(#m)" stroke-width="14" stroke-linecap="round" opacity="0.8"/>
+      </svg>`),
+    shirt:
+      "data:image/svg+xml;utf8," +
+      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+        <defs>
+          <linearGradient id="s" x1="0" x2="1">
+            <stop offset="0" stop-color="#ec4899"/><stop offset="1" stop-color="#a855f7"/>
+          </linearGradient>
+        </defs>
+        <path d="M220 210 L 320 150 L 360 220 L 440 220 L 480 150 L 580 210
+                 L 650 330 L 560 390 L 560 700 L 240 700 L 240 390 L 150 330 Z"
+              fill="rgba(0,0,0,0.12)" stroke="url(#s)" stroke-width="18" stroke-linejoin="round"/>
+      </svg>`),
+  };
+
+  function applyOverlay(kind){
+    const src = overlays[kind] || "";
+    arOverlayImg.src = src;
+    arOverlayImg.style.display = src ? "block" : "none";
+  }
+
+  async function startArCamera(){
+    if (arStream) return;
+    try{
+      arStream = await navigator.mediaDevices.getUserMedia({video:true});
+      arVideo.srcObject = arStream;
+      arStatus.textContent = "AR camera running ✅";
+    }catch (e){
+      arStatus.textContent = "AR camera not available";
+      console.error(e);
+    }
+  }
+
+  function stopArCamera(){
+    if (arStream){
+      arStream.getTracks().forEach(t=>t.stop());
+    }
+    arStream = null;
+    arVideo.srcObject = null;
+    arStatus.textContent = "AR camera is stopped";
+  }
+
+  arStartBtn.addEventListener("click", startArCamera);
+  arStopBtn.addEventListener("click", stopArCamera);
+  arItem.addEventListener("change", ()=> applyOverlay(arItem.value));
+  applyOverlay("none");
+
+  // initial routing
+  showPage(pageFromHash());
+  if (pageFromHash() === "virtual") startVirtualCamera();
 });
 
 </script>

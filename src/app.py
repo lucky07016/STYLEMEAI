@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import os
 import base64
@@ -123,6 +123,11 @@ def generate_suggestions(occasion: str, gender: str, style: str, budget: str):
         suggestions["tips"] += " Invest in premium fabrics and tailoring; focus on fit and material quality."
 
     return suggestions
+
+
+@app.route("/")
+def index():
+    return send_file(os.path.join(os.path.dirname(__file__), "index.html"))
 
 
 @app.post("/suggest")

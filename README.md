@@ -1,53 +1,58 @@
 # 👗 STYLEMEAI
 
-STYLEMEAI is an AI-powered styling platform that helps users enhance their fashion sense based on personal preferences and current trends.
+STYLEMEAI is a simple and stylish web app that helps users get outfit suggestions based on their occasion, gender, preferred vibe, and budget. It is designed to make fashion choices feel easier, faster, and more personalized.
 
-🚀 Built to combine **Artificial Intelligence + Fashion + User Experience**
-
----
-
-## 🌟 Features
-
-- 🎯 Personalized outfit recommendations  
-- 📊 Trend-based styling suggestions  
-- 🤖 AI-driven decision making  
-- 👤 User preference analysis  
-- 🌐 Web-based responsive platform  
+This project combines a clean front end with a Python Flask backend to generate helpful styling recommendations and save captured images for future use.
 
 ---
 
-## 🧠 How It Works
+## ✨ What This Project Does
 
-1. User inputs preferences (style, occasion, color, etc.)
-2. System analyzes current fashion trends
-3. AI model processes data
-4. Generates personalized styling suggestions
+- Suggests outfits for casual, college, party, and formal occasions
+- Allows users to choose gender, style, and budget preferences
+- Gives practical fashion tips and color recommendations
+- Saves uploaded or captured images locally for styling sessions
 
 ---
 
 ## 🛠️ Tech Stack
 
-- Frontend: HTML, CSS, JavaScript  
-- Backend: (Add your backend, e.g. Java / Node.js / Python)  
-- AI/ML: (e.g. Python, TensorFlow, Scikit-learn)  
-- Database: (e.g. MySQL / MongoDB)  
+- Frontend: HTML, CSS, JavaScript
+- Backend: Python, Flask
+- API: Flask REST endpoint
+- Image handling: Base64 image processing and local file saving
 
 ---
 
-## 📸 Screenshots
+## 🚀 How to Run
 
-(Add your project screenshots here)
-
----
-
-## 🚀 Installation
+1. Install the required Python packages:
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/stylemeai.git
+pip install -r src/requirements.txt
+```
 
-# Navigate to project folder
-cd stylemeai
+2. Start the Flask server:
 
-# Run the project
-(Add your run command here)
+```bash
+python src/app.py
+```
+
+3. Open the app or test the API endpoint:
+
+- The backend runs at http://127.0.0.1:5000
+- The main suggestion route is http://127.0.0.1:5000/suggest
+
+---
+
+## 📁 Project Structure
+
+- [src/app.py](src/app.py) - Flask backend and suggestion logic
+- [src/index.html](src/index.html) - Frontend page
+- [src/requirements.txt](src/requirements.txt) - Python dependencies
+
+---
+
+## 💡 Notes
+
+This version uses rule-based suggestions for now, but it can later be upgraded with AI models or real fashion recommendation APIs.
